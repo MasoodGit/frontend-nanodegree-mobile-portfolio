@@ -1,3 +1,50 @@
+
+## Changes made to improve performance
+
+### index.html
+
+1. inline css from style.css
+2. use @fontface for google "open sans"
+3. add async to js file related to google analytics and performance js.
+4. optimized images using karken.io.
+5. repeated the above for project-2048.html,project-mobile.html,project-webperf.html.
+
+### pizza.html
+1. inline css from style.css
+2. using gulp-uncss reduce bootstrap-grid.css and then inline it in pizza.html
+
+### main.js
+
+1. reduce the number of background pizza from 200 to 32
+   (this helped in avoiding to add logic to check the size of the viewport for the background images)
+   ```
+   https://piazza.com/class/i0sf6tsmg0r7do?cid=1068
+   ```
+2. refactor function changePizzaSizes(size)
+    move fetching of elements out of the for loop
+    move calculation of delta out of the for loop
+    move calculation of newwith out of the for loop
+    iterate the NodeList and update the width
+
+    ```//https://developer.mozilla.org/en/docs/Web/API/NodeList
+    ```
+3.  refactor function updatePositions()
+    moved the part of phase calculation out of the for loop
+
+### References
+
+1. uncss :
+    https://piazza.com/class/i0sf6tsmg0r7do?cid=1019
+    http://addyosmani.com/blog/removing-unused-css/
+2. gulp
+    http://www.sitepoint.com/introduction-gulp-js/
+3. others
+    https://piazza.com/class/i0sf6tsmg0r7do?cid=1074
+    https://www.youtube.com/watch?v=sqesm0euf9M&index=13&list=PL1B4F4863AEE2B122
+    https://piazza.com/class/i0sf6tsmg0r7do?cid=614
+
+
+
 ## Website Performance Optimization portfolio project
 
 Your challenge, if you wish to accept it (and we sure hope you will), is to optimize this online portfolio for speed! In particular, optimize the critical rendering path and make this page render as quickly as possible by applying the techniques you've picked up in the [Critical Rendering Path course](https://www.udacity.com/course/ud884).
