@@ -28,7 +28,8 @@ gh-pages url : http://masoodgit.github.io/frontend-nanodegree-mobile-portfolio/b
     move calculation of newwith out of the for loop
     iterate the NodeList and update the width
 
-    ```//https://developer.mozilla.org/en/docs/Web/API/NodeList
+    ```
+    https://developer.mozilla.org/en/docs/Web/API/NodeList
     ```
 3.  refactor function updatePositions()
     moved the part of phase calculation out of the for loop
