@@ -69,7 +69,7 @@ gulp.task('maincss', function(){
 });
 
 gulp.task('viewcss',function(){
-  return gulp.src('./src/views/css/*.css')
+  return gulp.src('./src/views/css/style.css')
   .pipe(minifyCSS())
   .pipe(gulp.dest('./build/views/css/'));
 });
@@ -77,9 +77,15 @@ gulp.task('viewcss',function(){
 gulp.task('removecss',function(){
   return gulp.src('./src/views/css/bootstrap-grid.css')
              .pipe(uncss({ html :['./src/views/pizza.html']}))
-             .pipe(gulp.dest('./out'));
+             .pipe(minifyCSS())
+             .pipe(gulp.dest('./build/views/css/'));
 });
 
+gulp.task('uncss',function(){
+  return gulp.src('./src/views/css/bootstrap-grid.css')
+             .pipe(uncss({ html :['./src/views/pizza.html']}))
+             .pipe(gulp.dest('./out'));
+});
 
 gulp.task('default',
   [
@@ -90,7 +96,8 @@ gulp.task('default',
   'mainjs',
   'perfjs',
   'maincss',
-  'viewcss'
+  'viewcss',
+  'removecss'
   ],function(){
 
 });
