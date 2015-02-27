@@ -16,6 +16,8 @@ Cameron Pittman, Udacity Course Developer
 cameron *at* udacity *dot* com
 */
 
+// number of pizza's that are 
+// displayed in the background.
 var BGROUND_PIZZA_COUNT = 32;
 
 // As you may have realized, this website randomly generates pizzas.
@@ -454,11 +456,15 @@ var resizePizzas = function(size) {
   function changePizzaSizes(size) {
     var randomPizzaContainerList = document.querySelectorAll(".randomPizzaContainer");
     var currentOffsetWidth = randomPizzaContainerList[0].offsetWidth;
+
+    // calculate the change in size
     var delta = determineDx(randomPizzaContainerList[0], size);
+
+    // calculate the new width based on current width and delta
     var newwidth = (currentOffsetWidth + delta) + 'px';
 
-    //https://developer.mozilla.org/en/docs/Web/API/NodeList
-
+    //from : https://developer.mozilla.org/en/docs/Web/API/NodeLists
+    //update the newwidth foreach pizza.
     var forEach = Array.prototype.forEach;
     forEach.call(randomPizzaContainerList,function(item){
       item.style.width = newwidth;
@@ -476,20 +482,24 @@ var resizePizzas = function(size) {
 
 window.performance.mark("mark_start_generating"); // collect timing data
 
-// // This for-loop actually creates and appends all of the pizzas when the page loads
-// for (var i = 2; i < 100; i++) {
-//   var pizzasDiv = document.getElementById("randomPizzas");
-//   pizzasDiv.appendChild(pizzaElementGenerator(i));
-
-// }
-
-document.addEventListener('DOMContentLoaded',function(evt){
+// This for-loop actually creates and appends all of the pizzas when the page loads
+// we use the createDocumentFragment API to generate all the pizza's
+// and append all at once to the DOM, hence improving the performance
+document.addEventListener('DOMContentLoaded',function(evt) {
+  
   var pizzasDocumentFragment = document.createDocumentFragment();
+  
+  //generate dom fragment containing pizza's
   for (var i = 2; i < 100; i++) {
     pizzasDocumentFragment.appendChild(pizzaElementGenerator(i));
   }
+
+  //fetch the dom element by id "randomPizzas"
   var divContainingPizzas = document.getElementById("randomPizzas");
+
+  //append the dom fragment to the dom element.
   divContainingPizzas.appendChild(pizzasDocumentFragment);
+  
 });
 
 
@@ -522,9 +532,11 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
+
+  //compute phase computation to be later in the loop
   var phaseComputation = document.body.scrollTop / 1250;
   var items = document.querySelectorAll('.mover');
-  console.log('items .....', items.length);
+
   for (var i = 0; i < BGROUND_PIZZA_COUNT; i++) {
     var phase = Math.sin(phaseComputation + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
