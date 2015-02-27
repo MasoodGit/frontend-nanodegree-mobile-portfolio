@@ -1,3 +1,4 @@
+gh-pages url : http://masoodgit.github.io/frontend-nanodegree-mobile-portfolio/build/index.html
 
 ## Changes made to improve performance
 
@@ -23,30 +24,26 @@
 2. refactor function changePizzaSizes(size)
     move fetching of elements out of the for loop
     move calculation of delta out of the for loop
-    move calculation of newwidth out of the for loop
+    move calculation of newwith out of the for loop
     iterate the NodeList and update the width
 
-    ```//https://developer.mozilla.org/en/docs/Web/API/NodeList
+    ```
+    https://developer.mozilla.org/en/docs/Web/API/NodeList
     ```
 3.  refactor function updatePositions()
     moved the part of phase calculation out of the for loop
 
-4.  create pizza elements using createDocumentFragment API to improve performance
-    when pageloads. line #488
-
 ### References
 
 1. uncss :
-    https://piazza.com/class/i0sf6tsmg0r7do?cid=1019
+    https://piazza.com/class/i0sf6tsmg0r7do?cid=1019 ,
     http://addyosmani.com/blog/removing-unused-css/
-2. gulp
+2. gulp :
     http://www.sitepoint.com/introduction-gulp-js/
-3. others
-    https://piazza.com/class/i0sf6tsmg0r7do?cid=1074
+3. others :
+    https://piazza.com/class/i0sf6tsmg0r7do?cid=1074 ,
     https://www.youtube.com/watch?v=sqesm0euf9M&index=13&list=PL1B4F4863AEE2B122
-    https://piazza.com/class/i0sf6tsmg0r7do?cid=614
-
-
+    https://piazza.com/class/i0sf6tsmg0r7do?cid=614 
 
 ## Website Performance Optimization portfolio project
 
