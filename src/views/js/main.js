@@ -20,6 +20,10 @@ cameron *at* udacity *dot* com
 // displayed in the background.
 var BGROUND_PIZZA_COUNT = 32;
 
+// create an object to hold the 
+// reference to background pizza images.
+var backGroundPizzas = {};
+
 // As you may have realized, this website randomly generates pizzas.
 // Here are arrays of all possible pizza ingredients.
 var pizzaIngredients = {};
@@ -336,6 +340,23 @@ var ingredientItemizer = function(string) {
   return "<li>" + string + "</li>";
 };
 
+//from http://stackoverflow.com/questions/13528512/modify-a-css-rule-object-with-javascript
+// and http://www.hunlock.com/blogs/Totally_Pwn_CSS_with_Javascript
+//set the width on the css class
+function setWidth(width) {
+  if(document.styleSheets) {
+    var styleSheet = document.styleSheets[0]; // as we only have inline css for pizza.html
+    var cssRules = styleSheet.cssRules || styleSheet.rules; //IE has rules 
+    for(var prop in cssRules) {
+        if(cssRules[prop].selectorText == '.randomPizzaContainer') {
+          cssRules[prop].style.width = width;
+          break;
+        }
+    }
+  }
+}
+
+
 // Returns a string with random pizza ingredients nested inside <li> tags
 var makeRandomPizza = function() {
   var pizza = "";
@@ -377,7 +398,7 @@ var pizzaElementGenerator = function(i) {
   pizzaDescriptionContainer = document.createElement("div");
 
   pizzaContainer.classList.add("randomPizzaContainer");
-  pizzaContainer.style.width = "33.33%";
+  //pizzaContainer.style.width = "33.33%";
   pizzaContainer.style.height = "325px";
   pizzaContainer.id = "pizza" + i;                // gives each pizza element a unique id
   pizzaImageContainer.classList.add("col-md-6");
@@ -410,13 +431,13 @@ var resizePizzas = function(size) {
   function changeSliderLabel(size) {
     switch(size) {
       case "1":
-        document.querySelector("#pizzaSize").innerHTML = "Small";
+        document.getElementById("pizzaSize").innerHTML = "Small";
         return;
       case "2":
-        document.querySelector("#pizzaSize").innerHTML = "Medium";
+        document.getElementById("pizzaSize").innerHTML = "Medium";
         return;
       case "3":
-        document.querySelector("#pizzaSize").innerHTML = "Large";
+        document.getElementById("pizzaSize").innerHTML = "Large";
         return;
       default:
         console.log("bug in changeSliderLabel");
@@ -428,7 +449,9 @@ var resizePizzas = function(size) {
   // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
   function determineDx (elem, size) {
     var oldwidth = elem.offsetWidth;
-    var windowwidth = document.querySelector("#randomPizzas").offsetWidth;
+    //from : http://jsperf.com/getelementbyid-vs-queryselector
+    //getElementById faster compared to querySelector
+    var windowwidth = document.getElementById("randomPizzas").offsetWidth;
     var oldsize = oldwidth / windowwidth;
 
     // TODO: change to 3 sizes? no more xl?
@@ -454,21 +477,39 @@ var resizePizzas = function(size) {
 
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
-    var randomPizzaContainerList = document.querySelectorAll(".randomPizzaContainer");
+    var randomPizzaContainerList = document.getElementsByClassName("randomPizzaContainer");
     var currentOffsetWidth = randomPizzaContainerList[0].offsetWidth;
 
     // calculate the change in size
     var delta = determineDx(randomPizzaContainerList[0], size);
 
     // calculate the new width based on current width and delta
-    var newwidth = (currentOffsetWidth + delta) + 'px';
+    var new_Width = (currentOffsetWidth + delta) + 'px';
 
-    //from : https://developer.mozilla.org/en/docs/Web/API/NodeLists
-    //update the newwidth foreach pizza.
+    /* OPTION 1: change cssRule....no significant improvement in performance */
+    /* call setwidth to change the cssRule, instead updating 
+     * each item
+     */
+    //setWidth(new_Width);
+
+    /* OPTION 2: use for loop to iterate over the nodelist */
+    
+    // var numberOfElements = randomPizzaContainerList.length;
+    // //for(var i = 0; i < numberOfElements; i++) //1.02ma , 0.99 ms
+    // for(var i = numberOfElements; i--;) //1.07ms , 0.77 ms
+    // {
+    //   randomPizzaContainerList[i].style.width = new_Width;
+    // }
+
+    /* OPTION 3: use forEach method of Array and apply on NodeLust */
+    /* pretty same numbers as compared to the for loop iteration */
+    
+    //https://developer.mozilla.org/en/docs/Web/API/NodeList
     var forEach = Array.prototype.forEach;
     forEach.call(randomPizzaContainerList,function(item){
-      item.style.width = newwidth;
+      item.style.width = new_Width;
     });
+
   }
 
   changePizzaSizes(size);
@@ -525,21 +566,33 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
   console.log("Average time to generate last 10 frames: " + sum / 10 + "ms");
 }
 
+
+
 // The following code for sliding background pizzas was pulled from Ilya's demo found at:
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
-
 // Moves the sliding background pizzas based on scroll position
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
 
-  //compute phase computation to be later in the loop
+  //compute phase computation to be used later in the loop
   var phaseComputation = document.body.scrollTop / 1250;
-  var items = document.querySelectorAll('.mover');
 
-  for (var i = 0; i < BGROUND_PIZZA_COUNT; i++) {
-    var phase = Math.sin(phaseComputation + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+  //compute sin function outside of the for loop , as the modulo 5 values remain
+  //constant for a cycle.
+  //from : http://www.peachpit.com/articles/article.aspx?p=31567&seqNum=6
+  var sin = [
+              Math.sin(phaseComputation + 0),
+              Math.sin(phaseComputation + 1),
+              Math.sin(phaseComputation + 2),
+              Math.sin(phaseComputation + 3),
+              Math.sin(phaseComputation + 4)
+              ];
+  //from : http://archive.oreilly.com/pub/a/server-administration/excerpts/even-faster-websites/writing-efficient-javascript.html
+  //fast loops , terminal condition now does a comparision toward 0.
+  for (var i = BGROUND_PIZZA_COUNT; i--;) {
+    var phase = sin[(i % 5)];
+    backGroundPizzas[i].style.left = backGroundPizzas[i].basicLeft + 100 * phase + 'px';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -557,8 +610,11 @@ window.addEventListener('scroll', updatePositions);
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
+
+  var movingPizzaDocFragment = document.createDocumentFragment();
   var cols = 8;
   var s = 256;
+  
   for (var i = 0; i < BGROUND_PIZZA_COUNT; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
@@ -567,7 +623,15 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    document.querySelector("#movingPizzas1").appendChild(elem);
+    movingPizzaDocFragment.appendChild(elem);
   }
+  //append the document fragment to movingPizzas1 div.
+  document.getElementById("movingPizzas1").appendChild(movingPizzaDocFragment);
+
+  //create a global reference to the moving pizza objects
+  backGroundPizzas = document.getElementsByClassName('mover');
+  
+  //update positions of mover pizza's
   updatePositions();
+
 });

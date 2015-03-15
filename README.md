@@ -33,6 +33,14 @@ gh-pages url : http://masoodgit.github.io/frontend-nanodegree-mobile-portfolio/b
 3.  refactor function updatePositions()
     moved the part of phase calculation out of the for loop
 
+4.  opitimize calculation of phase by moving sin function outside of the loop.
+
+5.  use of getElementsByClassName, getElementByID as needed in place of querySelectorAll and querySelector.
+
+6.  experimented with use / modification of cssRule acessing the document.Stylesheets.
+
+7.  most significant improvement in fps was seen with addition of "backface-visibility: hidden" to the .mover class
+
 ### References
 
 1. uncss :
@@ -44,6 +52,11 @@ gh-pages url : http://masoodgit.github.io/frontend-nanodegree-mobile-portfolio/b
     https://piazza.com/class/i0sf6tsmg0r7do?cid=1074 ,
     https://www.youtube.com/watch?v=sqesm0euf9M&index=13&list=PL1B4F4863AEE2B122
     https://piazza.com/class/i0sf6tsmg0r7do?cid=614 
+4. Optimization Office hours:
+    https://github.com/udacity/fend-office-hours/tree/master/Web%20Optimization/Effective%20Optimizations%20for%2060%20FPS
+
+5. http://www.hunlock.com/blogs/Totally_Pwn_CSS_with_Javascript
+
 
 ## Website Performance Optimization portfolio project
 
