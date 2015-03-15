@@ -477,6 +477,7 @@ var resizePizzas = function(size) {
 
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
+    
     var randomPizzaContainerList = document.getElementsByClassName("randomPizzaContainer");
     var currentOffsetWidth = randomPizzaContainerList[0].offsetWidth;
 
@@ -582,17 +583,17 @@ function updatePositions() {
   //constant for a cycle.
   //from : http://www.peachpit.com/articles/article.aspx?p=31567&seqNum=6
   var sin = [
-              Math.sin(phaseComputation + 0),
-              Math.sin(phaseComputation + 1),
-              Math.sin(phaseComputation + 2),
-              Math.sin(phaseComputation + 3),
-              Math.sin(phaseComputation + 4)
+              100 * Math.sin(phaseComputation),
+              100 * Math.sin(phaseComputation + 1),
+              100 * Math.sin(phaseComputation + 2),
+              100 * Math.sin(phaseComputation + 3),
+              100 * Math.sin(phaseComputation + 4)
               ];
   //from : http://archive.oreilly.com/pub/a/server-administration/excerpts/even-faster-websites/writing-efficient-javascript.html
   //fast loops , terminal condition now does a comparision toward 0.
   for (var i = BGROUND_PIZZA_COUNT; i--;) {
     var phase = sin[(i % 5)];
-    backGroundPizzas[i].style.left = backGroundPizzas[i].basicLeft + 100 * phase + 'px';
+    backGroundPizzas[i].style.left = backGroundPizzas[i].basicLeft + phase + 'px';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
